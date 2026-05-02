@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laravel Cheat Sheet</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+      line-height: 1.6;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: #020617;
+      color: #fff;
+      padding: 70px 20px;
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.35;
+    }
+
+    .hero::before {
+      background: #f97316;
+      left: -100px;
+      top: 20px;
+    }
+
+    .hero::after {
+      background: #0ea5e9;
+      right: -100px;
+      bottom: -60px;
+    }
+
+    .container {
+      position: relative;
+      max-width: 1200px;
+      margin: auto;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      font-size: 14px;
+      margin-bottom: 18px;
+      color: #e2e8f0;
+    }
+
+    h1 {
+      font-size: clamp(34px, 6vw, 64px);
+      line-height: 1.1;
+      max-width: 900px;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: #cbd5e1;
+      font-size: 18px;
+      margin-bottom: 28px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 12px;
+      max-width: 900px;
+      flex-wrap: wrap;
+    }
+
+    .search-box input {
+      flex: 1;
+      min-width: 260px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .search-box a {
+      text-decoration: none;
+      background: #f97316;
+      color: #fff;
+      padding: 16px 24px;
+      border-radius: 18px;
+      font-weight: bold;
+      transition: 0.25s;
+    }
+
+    .search-box a:hover {
+      background: #ea580c;
+    }
+
+    .main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 35px 20px;
+    }
+
+    .tabs {
+      position: sticky;
+      top: 0;
+      background: rgba(248,250,252,0.95);
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      padding: 14px 0;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 28px;
+    }
+
+    .tab-btn {
+      border: none;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: #fff;
+      color: #334155;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 600;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    .tab-btn.active {
+      background: #020617;
+      color: #fff;
+    }
+
+    .section {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 28px;
+      padding: 26px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f97316, #facc15);
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .section h2 {
+      font-size: 26px;
+    }
+
+    .section-header p {
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      padding: 20px;
+    }
+
+    .card h3 {
+      font-size: 19px;
+      margin-bottom: 5px;
+    }
+
+    .card p {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .code-wrapper {
+      position: relative;
+      background: #020617;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    pre {
+      color: #e2e8f0;
+      font-size: 14px;
+      padding: 22px;
+      overflow-x: auto;
+      max-height: 420px;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .empty {
+      display: none;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      text-align: center;
+      padding: 40px;
+      color: #64748b;
+    }
+
+    footer {
+      background: #fff;
+      border-top: 1px solid #e2e8f0;
+      padding: 28px 20px;
+      text-align: center;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    footer strong {
+      color: #0f172a;
+    }
+
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+      }
+
+      .hero {
+        padding: 44px 16px 36px;
+      }
+
+      .badge {
+        font-size: 12px;
+        padding: 7px 12px;
+      }
+
+      h1 {
+        font-size: 32px;
+        line-height: 1.18;
+      }
+
+      .hero p {
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .search-box {
+        display: block;
+      }
+
+      .search-box input,
+      .search-box a {
+        display: block;
+        width: 100%;
+      }
+
+      .search-box input {
+        min-width: 0;
+        margin-bottom: 12px;
+        padding: 14px 15px;
+      }
+
+      .search-box a {
+        text-align: center;
+        padding: 14px 18px;
+      }
+
+      .main {
+        padding: 22px 14px;
+      }
+
+      .tabs {
+        top: 0;
+        margin-left: -14px;
+        margin-right: -14px;
+        padding: 12px 14px;
+        scrollbar-width: none;
+      }
+
+      .tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .tab-btn {
+        padding: 9px 14px;
+        font-size: 13px;
+      }
+
+      .section {
+        border-radius: 20px;
+        padding: 16px;
+        margin-bottom: 18px;
+      }
+
+      .section-header {
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        border-radius: 14px;
+        font-size: 17px;
+      }
+
+      .section h2 {
+        font-size: 21px;
+        line-height: 1.25;
+      }
+
+      .section-header p {
+        font-size: 13px;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .card {
+        border-radius: 18px;
+        padding: 15px;
+        min-width: 0;
+      }
+
+      .card h3 {
+        font-size: 17px;
+      }
+
+      .card p {
+        font-size: 13px;
+      }
+
+      .code-wrapper {
+        border-radius: 14px;
+        max-width: 100%;
+      }
+
+      pre {
+        width: 100%;
+        max-width: 100%;
+        font-size: 12.5px;
+        line-height: 1.55;
+        padding: 44px 14px 16px;
+        white-space: pre;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .copy-btn {
+        top: 8px;
+        right: 8px;
+        padding: 5px 9px;
+      }
+
+      footer {
+        padding: 22px 14px;
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      h1 {
+        font-size: 28px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .section {
+        padding: 14px;
+      }
+
+      pre {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="container">
+      <div class="badge">Laravel Developer Cheat Sheet</div>
+      <h1>Laravel Codes, Syntax, Patterns & API Deployment Guide</h1>
+      <p>Useful Laravel cheat sheet for commands, routes, middleware, JWT auth, API resources, database patterns, Excel export, deployment, and reusable code snippets.</p>
+
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search route, JWT, middleware, export, deploy..." />
+        <a href="#cheatsheet">Browse Cheat Sheet</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main" id="cheatsheet">
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-filter="all">All</button>
+      <button class="tab-btn" data-filter="commands">Commands</button>
+      <button class="tab-btn" data-filter="routes">Routes</button>
+      <button class="tab-btn" data-filter="controller">Controller</button>
+      <button class="tab-btn" data-filter="middleware">Middleware</button>
+      <button class="tab-btn" data-filter="jwt">JWT</button>
+      <button class="tab-btn" data-filter="resources">Resources</button>
+      <button class="tab-btn" data-filter="excel">Excel</button>
+      <button class="tab-btn" data-filter="database">Database</button>
+      <button class="tab-btn" data-filter="deploy">Deploy</button>
+    </div>
+
+    <div id="sections">
+      <section class="section" data-category="commands">
+        <div class="section-header">
+          <div class="icon">⌘</div>
+          <div>
+            <h2>Artisan Commands</h2>
+            <p>Useful Laravel commands for daily development.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Create Project</h3>
+            <p>Start a new Laravel project.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>composer create-project laravel/laravel my-app
+cd my-app
+php artisan serve</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Create Common Files</h3>
+            <p>Model, migration, controller, middleware, request and resource.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>php artisan make:model Product -mcr
+php artisan make:controller Api/ProductController --api
+php artisan make:middleware CheckRole
+php artisan make:request StoreProductRequest
+php artisan make:resource ProductResource</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Database Commands</h3>
+            <p>Migration and seed commands.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>php artisan migrate
+php artisan migrate:fresh --seed
+php artisan db:seed
+php artisan make:seeder ProductSeeder</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Cache Clear Commands</h3>
+            <p>Use after route, config, env or view changes.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>php artisan optimize:clear
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+php artisan cache:clear</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="routes">
+        <div class="section-header">
+          <div class="icon">⇄</div>
+          <div>
+            <h2>Routes & API</h2>
+            <p>Web routes, API routes and route groups.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Web Route</h3>
+            <p>Use routes/web.php for browser pages.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/products', [ProductController::class, 'index']);</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>API Resource Route</h3>
+            <p>Use routes/api.php for JSON APIs.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>use App\Http\Controllers\Api\ProductController;
+
+Route::prefix('v1')->group(function () {
+    Route::apiResource('products', ProductController::class);
+});</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Protected Route Group</h3>
+            <p>Group routes by prefix and middleware.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::apiResource('products', ProductController::class);
+});</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="controller">
+        <div class="section-header">
+          <div class="icon">{ }</div>
+          <div>
+            <h2>Controller Pattern</h2>
+            <p>Clean API CRUD controller pattern.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>API Controller CRUD</h3>
+            <p>Use request validation and API resource.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>class ProductController extends Controller
+{
+    public function index()
+    {
+        return ProductResource::collection(Product::latest()->paginate(10));
+    }
+
+    public function store(StoreProductRequest $request)
+    {
+        $product = Product::create($request->validated());
+        return new ProductResource($product);
+    }
+
+    public function show(Product $product)
+    {
+        return new ProductResource($product);
+    }
+
+    public function update(UpdateProductRequest $request, Product $product)
+    {
+        $product->update($request->validated());
+        return new ProductResource($product);
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+        return response()->json(['message' => 'Deleted successfully']);
+    }
+}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="middleware">
+        <div class="section-header">
+          <div class="icon">🛡</div>
+          <div>
+            <h2>Middleware</h2>
+            <p>Protect API routes and user roles.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Create Middleware</h3>
+            <p>Generate a middleware class.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>php artisan make:middleware CheckRole</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Role Middleware</h3>
+            <p>Check user role before request continues.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>public function handle(Request $request, Closure $next, string $role)
+{
+    if (!$request->user() || $request->user()->role !== $role) {
+        return response()->json(['message' => 'Forbidden'], 403);
+    }
+
+    return $next($request);
+}</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Use Middleware</h3>
+            <p>Apply middleware to routes.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::apiResource('products', ProductController::class);
+});</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="jwt">
+        <div class="section-header">
+          <div class="icon">🔐</div>
+          <div>
+            <h2>JWT Authentication</h2>
+            <p>JWT login and protected route examples.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Install JWT</h3>
+            <p>Install tymon/jwt-auth package.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>composer require tymon/jwt-auth
+php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
+php artisan jwt:secret</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Login API</h3>
+            <p>Return token after successful login.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>public function login(Request $request)
+{
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    if (!$token = auth('api')->attempt($credentials)) {
+        return response()->json(['message' => 'Invalid credentials'], 401);
+    }
+
+    return response()->json([
+        'access_token' => $token,
+        'token_type' => 'bearer',
+        'expires_in' => auth('api')->factory()->getTTL() * 60,
+    ]);
+}</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Protected JWT Route</h3>
+            <p>Use Bearer token in Authorization header.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>Route::middleware('auth:api')->group(function () {
+    Route::get('/me', function () {
+        return auth('api')->user();
+    });
+});</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="resources">
+        <div class="section-header">
+          <div class="icon">📄</div>
+          <div>
+            <h2>API Resources</h2>
+            <p>Clean JSON response formatting.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Create Resource</h3>
+            <p>Transform model data before sending JSON.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>php artisan make:resource ProductResource</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Product Resource</h3>
+            <p>Consistent API response format.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>class ProductResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'price' => number_format($this->price),
+            'image_url' => asset('storage/' . $this->image),
+            'created_at' => $this->created_at->format('Y-m-d'),
+        ];
+    }
+}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="excel">
+        <div class="section-header">
+          <div class="icon">⬇</div>
+          <div>
+            <h2>Excel Export / Import</h2>
+            <p>Laravel Excel examples.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Install Laravel Excel</h3>
+            <p>Install Excel import/export package.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>composer require maatwebsite/excel</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Create Export Class</h3>
+            <p>Generate export class.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>php artisan make:export ProductsExport --model=Product</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Export Controller</h3>
+            <p>Download Excel from controller.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>use Maatwebsite\Excel\Facades\Excel;
+
+public function export()
+{
+    return Excel::download(new ProductsExport, 'products.xlsx');
+}</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>ProductsExport Class</h3>
+            <p>Export product data with headings.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>class ProductsExport implements FromCollection, WithHeadings
+{
+    public function collection()
+    {
+        return Product::select('id', 'name', 'price', 'stock')->get();
+    }
+
+    public function headings(): array
+    {
+        return ['ID', 'Name', 'Price', 'Stock'];
+    }
+}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="database">
+        <div class="section-header">
+          <div class="icon">DB</div>
+          <div>
+            <h2>Database & Eloquent</h2>
+            <p>Model, query and relationship patterns.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Model Fillable</h3>
+            <p>Allow mass assignment for selected columns.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>class Product extends Model
+{
+    protected $fillable = [
+        'name',
+        'price',
+        'stock',
+        'image',
+    ];
+}</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Useful Query Patterns</h3>
+            <p>Common Eloquent queries.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>Product::latest()->paginate(10);
+Product::where('status', 1)->get();
+Product::whereBetween('price', [10000, 50000])->get();
+Product::with('category')->get();
+Product::whereHas('orders')->get();</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Relationship Examples</h3>
+            <p>Use relationships instead of manual joins.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>public function category()
+{
+    return $this->belongsTo(Category::class);
+}
+
+public function orders()
+{
+    return $this->belongsToMany(Order::class);
+}</code></pre></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-category="deploy">
+        <div class="section-header">
+          <div class="icon">🚀</div>
+          <div>
+            <h2>API Deploy Checklist</h2>
+            <p>Production deployment commands and config.</p>
+          </div>
+        </div>
+        <div class="cards">
+          <div class="card">
+            <h3>Production ENV</h3>
+            <p>Never keep APP_DEBUG=true in production.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://yourdomain.com
+
+DB_DATABASE=your_db
+DB_USERNAME=your_user
+DB_PASSWORD=your_password</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Deploy Commands</h3>
+            <p>Run after uploading project to server.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>composer install --optimize-autoloader --no-dev
+php artisan key:generate
+php artisan migrate --force
+php artisan storage:link
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Folder Permission</h3>
+            <p>Required for logs, cache, sessions and uploads.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>chmod -R 775 storage bootstrap/cache
+chown -R www-data:www-data storage bootstrap/cache</code></pre></div>
+          </div>
+          <div class="card">
+            <h3>Nginx Public Root</h3>
+            <p>Server document root must point to public folder.</p>
+            <div class="code-wrapper"><button class="copy-btn">Copy</button><pre><code>root /var/www/my-app/public;
+
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}</code></pre></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="empty" id="emptyBox">
+      <h3>No matching cheat sheet found.</h3>
+      <p>Try searching for route, JWT, middleware, excel, deploy, or command.</p>
+    </div>
+  </main>
+
+  <footer>
+    Laravel Cheat Sheet Website · Developed by <strong>Shine Lynn Aung</strong>
+  </footer>
+
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const sections = document.querySelectorAll('.section');
+    const emptyBox = document.getElementById('emptyBox');
+    let activeFilter = 'all';
+
+    function filterContent() {
+      const keyword = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      sections.forEach(section => {
+        const category = section.dataset.category;
+        const text = section.innerText.toLowerCase();
+        const matchCategory = activeFilter === 'all' || activeFilter === category;
+        const matchSearch = text.includes(keyword);
+
+        if (matchCategory && matchSearch) {
+          section.style.display = 'block';
+          visibleCount++;
+        } else {
+          section.style.display = 'none';
+        }
+      });
+
+      emptyBox.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    tabButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        activeFilter = button.dataset.filter;
+        filterContent();
+      });
+    });
+
+    searchInput.addEventListener('input', filterContent);
+
+    document.querySelectorAll('.copy-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const code = button.nextElementSibling.innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          button.innerText = 'Copied';
+          setTimeout(() => button.innerText = 'Copy', 1200);
+        } catch (error) {
+          button.innerText = 'Failed';
+          setTimeout(() => button.innerText = 'Copy', 1200);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
